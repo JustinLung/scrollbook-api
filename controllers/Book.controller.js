@@ -3,7 +3,13 @@ const helper = require("./../models/helper");
 
 const BookController = {
   async getAll() {
-    const rows = await db.query('SELECT * FROM book')
+    const rows = await db.query(`
+      SELECT 'book'.*, 'author'.'name' as 'author_name', 'author'.'surname' as 'author_surname',
+      'author'.'initials' as 'author_initials' FROM 'book' 
+      INNER JOIN 'author' 
+      ON 'book'.'author_id' = 'author'.'author_id' 
+      WHERE 'book_id' = 1
+    `)
     return {
       data: helper.emptyOrRows(rows)
     }
@@ -21,6 +27,21 @@ const BookController = {
       data: book,
       meta: {
         insertId: rows.insertId
+      }
+    }
+  },
+
+  async delete(book_id) {
+    const rows = await db.query(`
+    DELETE FROM 'book' WHERE 'book_id' = ?
+    `,
+    [book_id])
+
+    return {
+      meta: { 
+        book_id,
+        affectedRows: rows.affectedRows,
+        changedRows: rows.changedRows,
       }
     }
   }

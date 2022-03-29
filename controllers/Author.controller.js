@@ -21,9 +21,24 @@ const AuthorController = {
       data: author,
       meta: {
         insertId: rows.insertId,
-      },
+      }
     }
   },
+
+  async delete(author_id) {
+    const rows = await db.query(`
+    DELETE FROM 'author' WHERE 'author_id' = ?
+    `,
+    [author_id])
+
+    return {
+      meta: { 
+        author_id,
+        affectedRows: rows.affectedRows,
+        changedRows: rows.changedRows,
+      }
+    }
+  }
 }
 
 module.exports = AuthorController

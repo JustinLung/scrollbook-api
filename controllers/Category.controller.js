@@ -21,6 +21,21 @@ const CategoryController = {
       },
     }
   },
+
+  async delete(category_id) {
+    const rows = await db.query(`
+    DELETE FROM 'category' WHERE 'category_id' = ?
+    `,
+    [category_id])
+
+    return {
+      meta: { 
+        category_id,
+        affectedRows: rows.affectedRows,
+        changedRows: rows.changedRows,
+      }
+    }
+  }
 }
 
 module.exports = CategoryController
